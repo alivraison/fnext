@@ -2,7 +2,6 @@ package verify
 
 import (
 	"fmt"
-	"html"
 	"net/http"
 
 	"github.com/fnproject/fn/api/server"
@@ -10,30 +9,32 @@ import (
 )
 
 func init() {
-	server.RegisterExtension(&verifyExt{})
+	server.RegisterExtension(&fbwebhookExt{})
 }
 
-type verifyExt struct {
+type fbwebhookExt struct {
 }
 
-func (e *verifyExt) Name() string {
+func (e *fbwebhookExt) Name() string {
 	return "github.com/alivraison/fnext/fbmessenger/webhook/verify"
 }
 
-func (e *verifyExt) Setup(s fnext.ExtServer) error {
-	s.AddEndpoint("GET", "/webhook", &simpleEndpoint{})
+func (e *fbwebhookExt) Setup(s fnext.ExtServer) error {
+	s.AddEndpoint("GET", "/webhook", &verifyEndpoint{})
 	return nil
 }
 
-// SimpleEndpoint is used for logging in. Returns a JWT token if successful.
-type simpleEndpoint struct {
+// verifyEndpoint is used for logging in. Returns a JWT token if successful.
+type verifyEndpoint struct {
 }
 
-func (v *simpleEndpoint) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("SIMPLEENDPOINT SERVEHTTP")
-	fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
+func (v *verifyEndpoint) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+	if r.FormValue("hub.mode") == "subscribe" && r.FormValue("hub.verify_token") == "CHANGE_TO_ENV" {
+		fmt.Fprintf(w, r.FormValue("hub.challenge"))
+		fmt.Println("Verified")
+		return
+	}
+	fmt.Println("Failed Validation")
+	http.Error(w, "Failed validation. Make sure the validation tokens match.", http.StatusForbidden)
+	return
 }
-
-//next.ServeHTTP(w, r.WithContext(ctx))
-
-//Handle(next http.Handler) http.Handler
