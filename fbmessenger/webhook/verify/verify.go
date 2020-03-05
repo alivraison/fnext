@@ -16,7 +16,7 @@ type verifyExt struct {
 }
 
 func (e *verifyExt) Name() string {
-	return "github.com/alivraison/fbmessenger/webhook/verify"
+	return "github.com/alivraison/fnext/fbmessenger/webhook/verify"
 }
 
 func (e *verifyExt) Setup(s fnext.ExtServer) error {
@@ -24,7 +24,7 @@ func (e *verifyExt) Setup(s fnext.ExtServer) error {
 	return nil
 }
 
-// SimpleEndpoint is used for logging in. Returns a JWT token if successful.
+// SimpleEndpoint is used
 type SimpleEndpoint struct {
 }
 
