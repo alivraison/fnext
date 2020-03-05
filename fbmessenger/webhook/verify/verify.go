@@ -16,7 +16,7 @@ type verifyExt struct {
 }
 
 func (e *verifyExt) Name() string {
-	return "alivraison.com/chatbot/fbwebhook/verify"
+	return "github.com/alivraison/fbmessenger/webhook/verify"
 }
 
 func (e *verifyExt) Setup(s fnext.ExtServer) error {
