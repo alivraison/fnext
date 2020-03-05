@@ -24,7 +24,6 @@ func (e *fbwebhookExt) Setup(s fnext.ExtServer) error {
 	return nil
 }
 
-// verifyEndpoint is used for logging in. Returns a JWT token if successful.
 type verifyEndpoint struct {
 }
 
