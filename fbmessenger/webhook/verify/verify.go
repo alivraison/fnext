@@ -2,6 +2,7 @@ package verify
 
 import (
 	"fmt"
+	"html"
 	"net/http"
 
 	"github.com/fnproject/fn/api/server"
@@ -20,17 +21,17 @@ func (e *verifyExt) Name() string {
 }
 
 func (e *verifyExt) Setup(s fnext.ExtServer) error {
-	s.AddEndpoint("GET", "/webhook", &SimpleEndpoint{})
+	s.AddEndpoint("GET", "/webhook", &simpleEndpoint{})
 	return nil
 }
 
-// SimpleEndpoint is used
-type SimpleEndpoint struct {
+// SimpleEndpoint is used for logging in. Returns a JWT token if successful.
+type simpleEndpoint struct {
 }
 
-func (v *SimpleEndpoint) ServeHTTP(w http.ResponseWriter, r *http.Request) {
+func (v *simpleEndpoint) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("SIMPLEENDPOINT SERVEHTTP")
-
+	fmt.Fprintf(w, "Hello, %q", html.EscapeString(r.URL.Path))
 }
 
 //next.ServeHTTP(w, r.WithContext(ctx))
